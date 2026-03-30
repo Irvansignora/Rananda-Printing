@@ -1,0 +1,104 @@
+{
+  "_comment": "File ini digunakan saat deploy ke GitHub Pages. Edit via admin.html lalu Export JSON dan timpa file ini.",
+  "site": {
+    "title": "Rananda Printing – Digital Printing & Laser Cutting",
+    "desc": "Percetakan digital terpercaya Indonesia. Digital Printing, Laser Cutting, UV Akrilik."
+  },
+  "wa_number": "6285318182400",
+  "hero": {
+    "badge": "Percetakan Terpercaya Indonesia",
+    "title1": "Cetak",
+    "title_teal": "Kualitas Premium",
+    "title2": "Harga",
+    "title_fire": "Terjangkau!",
+    "sub": "Digital Printing, Laser Cutting, UV Akrilik, dan ratusan produk cetak lainnya. Kualitas bintang 5, harga bersahabat, pengerjaan super cepat!",
+    "btn1_text": "🎁 Request Sample Gratis",
+    "btn1_wa": "6285318182400",
+    "btn2_text": "Lihat Layanan ✦"
+  },
+  "chips": [
+    { "icon": "🖨️", "title": "Digital Printing", "sub": "Banner, Brosur, Stiker" },
+    { "icon": "⚡", "title": "Laser Cutting", "sub": "Presisi Tinggi" },
+    { "icon": "✨", "title": "UV Akrilik", "sub": "Glossy Premium" },
+    { "icon": "🚀", "title": "Express 3 Hari", "sub": "Siap dikirim!" }
+  ],
+  "marquee": ["Digital Printing","Laser Cutting","UV Akrilik","Banner & Spanduk","Stiker Custom","Neon Box LED","Merchandise","Sample Gratis"],
+  "stats": [
+    { "num": "500+", "label": "Klien Puas" },
+    { "num": "10000+", "label": "Produk Selesai" },
+    { "num": "3 Hari", "label": "Express Order" }
+  ],
+  "services": [
+    { "id": 1, "icon": "🖨️", "color": "si-teal", "name": "Digital Printing", "desc": "Cetak berkualitas tinggi untuk semua kebutuhan promosi. Warna tajam, detail presisi, tahan lama di segala cuaca.", "tags": ["Banner & Spanduk","Brosur & Flyer","Poster","Kartu Nama","Kalender"], "wa_msg": "Halo, saya tertarik Digital Printing." },
+    { "id": 2, "icon": "⚡", "color": "si-orange", "name": "Laser Cutting & Engraving", "desc": "Teknologi laser presisi tinggi untuk pemotongan dan ukiran detail. Akurasi hingga 0.1mm di berbagai material.", "tags": ["Akrilik","MDF / Kayu","Karet","Custom Shape","Ukiran Logo"], "wa_msg": "Halo, saya tertarik Laser Cutting." },
+    { "id": 3, "icon": "✨", "color": "si-amber", "name": "UV Printing Akrilik", "desc": "Cetak langsung di atas akrilik dengan teknologi UV. Warna super cerah, efek glossy premium.", "tags": ["Plakat Akrilik","Photo Acrylic","Signage","Award & Trophy"], "wa_msg": "Halo, saya tertarik UV Akrilik." },
+    { "id": 4, "icon": "🏷️", "color": "si-green", "name": "Stiker & Label Custom", "desc": "Berbagai jenis stiker custom untuk branding produk, kemasan, dan dekorasi. Tahan air dan UV outdoor.", "tags": ["Stiker Vinyl","Label Produk","Transparan","Die Cut"], "wa_msg": "Halo, saya tertarik Stiker Custom." },
+    { "id": 5, "icon": "👕", "color": "si-pink", "name": "Cetak Merchandise", "desc": "Kustomisasi merchandise branded untuk event, corporate gift, atau merchandise toko.", "tags": ["Mug Print","Tote Bag","Pin & Badge","Gantungan Kunci"], "wa_msg": "Halo, saya tertarik Merchandise Custom." },
+    { "id": 6, "icon": "🔆", "color": "si-purple", "name": "Neon Box & Signage", "desc": "Signage, neon box LED, dan papan nama berkualitas untuk toko, kantor, dan branding bisnis Anda.", "tags": ["Neon Box LED","Letter Timbul","Papan Nama","Backlit Sign"], "wa_msg": "Halo, saya tertarik Neon Box." }
+  ],
+  "products": [
+    { "id": 1, "emoji": "🖼️", "color": "pi-1", "name": "Banner Full Color", "desc": "Cetak tajam, tahan UV & air, berbagai ukuran", "desc_long": "Banner full color dengan kualitas cetak terbaik. Tahan air, tahan UV, dan tersedia dalam berbagai ukuran sesuai kebutuhan.", "category": "Digital Printing", "wa_msg": "Saya mau pesan Banner Full Color.", "featured": true },
+    { "id": 2, "emoji": "⚡", "color": "pi-2", "name": "Laser Cut Akrilik", "desc": "Presisi tinggi, hasil rapi & detail sempurna", "desc_long": "Laser cutting akrilik dengan presisi tinggi. Cocok untuk plakat, display, dekorasi, dan souvenir eksklusif.", "category": "Laser Cutting", "wa_msg": "Saya mau pesan Laser Cut Akrilik.", "featured": true },
+    { "id": 3, "emoji": "✨", "color": "pi-3", "name": "Plakat UV Akrilik", "desc": "Premium, glossy, cocok untuk penghargaan", "desc_long": "Plakat UV akrilik premium dengan efek glossy yang elegan. Ideal untuk award, trophy, dan penghargaan perusahaan.", "category": "UV Akrilik", "wa_msg": "Saya mau pesan Plakat UV Akrilik.", "featured": true },
+    { "id": 4, "emoji": "🏷️", "color": "pi-4", "name": "Stiker Die Cut Custom", "desc": "Bentuk bebas, tahan air, warna pop & awet", "desc_long": "Stiker die cut custom dengan bentuk bebas sesuai desain Anda. Tahan air, tahan sinar UV, warna vivid dan awet.", "category": "Stiker", "wa_msg": "Saya mau pesan Stiker Die Cut.", "featured": true },
+    { "id": 5, "emoji": "🎁", "color": "pi-5", "name": "Merchandise Branded", "desc": "Mug, tote bag, pin — branding yang sempurna", "desc_long": "Merchandise branded untuk corporate gift, event, dan promosi. Mug, tote bag, pin, gantungan kunci, dan masih banyak lagi.", "category": "Merchandise", "wa_msg": "Saya mau pesan Merchandise.", "featured": true },
+    { "id": 6, "emoji": "🔆", "color": "pi-6", "name": "Neon Box LED", "desc": "Eye-catching, terang, tahan lama untuk toko", "desc_long": "Neon box LED berkualitas tinggi untuk toko, restoran, dan kantor. Terang, hemat energi, dan tahan lama.", "category": "Signage", "wa_msg": "Saya mau pesan Neon Box.", "featured": true }
+  ],
+  "how": {
+    "tag": "📋 Cara Kerja",
+    "title": "Pesan Gampang, Terima Cepat",
+    "sub": "Proses simpel & transparan dari konsultasi hingga produk tiba di tangan Anda.",
+    "steps": [
+      { "num": "01", "title": "💬 Konsultasi via WhatsApp", "desc": "Hubungi kami lewat WA, ceritakan kebutuhan Anda — jenis produk, ukuran, jumlah, dan desain. Tim kami siap 7 hari seminggu." },
+      { "num": "02", "title": "📐 Kirim File Desain", "desc": "Upload file desain (AI, CDR, PDF, PNG, JPG). Belum punya desain? Tim kreatif kami siap bantu dengan harga sangat terjangkau." },
+      { "num": "03", "title": "✅ Konfirmasi & Pembayaran", "desc": "Kami kirimkan penawaran harga & estimasi waktu. Setelah setuju, lakukan pembayaran DP atau lunas sesuai kesepakatan." },
+      { "num": "04", "title": "🔨 Proses Produksi", "desc": "Tim kami memproses dengan mesin modern. Anda akan dapat update progress berkala via WhatsApp — transparan 100%!" },
+      { "num": "05", "title": "🚀 Kirim ke Seluruh Indonesia", "desc": "Produk siap dikirim ke seluruh Indonesia dengan packing aman & rapi. Bisa juga diambil langsung di workshop kami." }
+    ]
+  },
+  "why": {
+    "tag": "💡 Kenapa Kami",
+    "title": "Kualitas Premium, Harga Bersahabat",
+    "sub": "Kami bukan sekadar percetakan biasa. Kami adalah mitra branding Anda yang berkomitmen pada hasil terbaik di setiap pesanan.",
+    "feats": [
+      { "icon": "⚡", "title": "Mesin Generasi Terbaru", "desc": "Teknologi digital printing dan laser cutting terkini untuk hasil cetak yang tajam dan presisi." },
+      { "icon": "🎨", "title": "Tim Desainer Profesional", "desc": "Belum punya desain? Tim kreatif berpengalaman kami siap mewujudkan desain impian Anda." },
+      { "icon": "🚀", "title": "Express 3 Hari Kerja", "desc": "Butuh cepat? Layanan express kami siap menyelesaikan pesanan tanpa mengorbankan kualitas." },
+      { "icon": "💰", "title": "Harga Transparan & Bersaing", "desc": "Tidak ada biaya tersembunyi. Penawaran jelas dan kompetitif untuk semua skala pesanan." }
+    ],
+    "stat_cards": [
+      { "num": "500+", "label": "Klien Puas" },
+      { "num": "10K+", "label": "Produk Selesai" },
+      { "num": "3 Hr", "label": "Express Order" },
+      { "num": "5★", "label": "Rating Rata-rata" }
+    ]
+  },
+  "testimonials": [
+    { "id": 1, "name": "Andi Pratama", "from": "Pemilik Toko Pakaian, Jakarta", "avatar": "A", "color": "av1", "quote": "Kualitas banner-nya luar biasa! Warnanya tajam dan tidak pudar meski kena hujan terus-terusan. Sudah langganan 2 tahun, tidak pernah mengecewakan!", "stars": 5 },
+    { "id": 2, "name": "Sari Dewi", "from": "Event Organizer, Surabaya", "avatar": "S", "color": "av2", "quote": "Laser cutting akrilik-nya rapi banget, presisi dan super detail. Plakat untuk acara perusahaan kami kelihatan sangat premium. Highly recommended!", "stars": 5 },
+    { "id": 3, "name": "Rizky Ramadhan", "from": "Brand Owner UMKM, Bandung", "avatar": "R", "color": "av3", "quote": "Order stiker 1000 pcs, selesai tepat waktu dan kualitasnya konsisten dari awal sampai akhir. Harganya juga paling bersaing!", "stars": 5 }
+  ],
+  "cta": {
+    "tag": "🎁 Penawaran Spesial",
+    "title": "Coba Dulu Gratis, Baru Order!",
+    "desc": "Kami percaya kualitas kami. Request sample gratis sekarang dan rasakan sendiri standar premium Rananda Printing sebelum Anda memutuskan order.",
+    "btn_wa": "💬 Request Sample via WhatsApp",
+    "wa_msg": "Halo Rananda Printing! Saya ingin request sample gratis. Tolong infokan caranya.",
+    "btn2": "Lihat Semua Layanan"
+  },
+  "footer": {
+    "company_name": "Rananda Printing",
+    "company_tagline": "Solusi cetak digital terlengkap untuk bisnis dan personal Anda. Kualitas premium, harga terjangkau, pengerjaan super cepat.",
+    "email": "info@ranandaprinting.com",
+    "wa": "6285318182400",
+    "address": "Bandung, Indonesia",
+    "hours": "Senin–Sabtu, 08.00–17.00",
+    "social": {
+      "ig": "#",
+      "fb": "#",
+      "tiktok": "#",
+      "shopee": "#"
+    },
+    "copyright": "© 2025 Rananda Printing. All rights reserved."
+  }
+}

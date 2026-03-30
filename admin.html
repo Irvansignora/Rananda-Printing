@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel – Rananda Printing</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal: #00b4c4; --teal-dark: #007a8a; --teal-light: #00d4e8;
+  --orange: #ff6a00; --amber: #ffb800;
+  --navy: #1a2d6b; --navy-light: #2a3f8f;
+  --white: #fff; --gray: #f5f8fa; --gray2: #e8ecf0;
+  --text: #1a2d6b; --text-light: #5a6a90;
+  --danger: #ef4444; --success: #22c55e;
+  --sidebar-w: 260px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Poppins',sans-serif;background:var(--gray);color:var(--text);min-height:100vh}
+
+/* LOGIN */
+#loginScreen{position:fixed;inset:0;z-index:9999;background:linear-gradient(135deg,var(--navy),#0d1a4a);display:flex;align-items:center;justify-content:center}
+.login-box{background:#fff;border-radius:24px;padding:2.5rem;width:360px;box-shadow:0 24px 80px rgba(0,0,0,0.3);text-align:center}
+.login-logo{font-family:'Nunito',sans-serif;font-weight:900;font-size:1.3rem;color:var(--navy);margin-bottom:.3rem}
+.login-sub{color:var(--text-light);font-size:.82rem;margin-bottom:1.8rem}
+.login-box input{width:100%;padding:.8rem 1rem;border:2px solid var(--gray2);border-radius:12px;font-size:.88rem;font-family:'Poppins',sans-serif;margin-bottom:.8rem;outline:none;transition:border .2s}
+.login-box input:focus{border-color:var(--teal)}
+.login-btn{width:100%;padding:.85rem;background:linear-gradient(135deg,var(--teal),var(--teal-light));color:#fff;border:none;border-radius:12px;font-family:'Nunito',sans-serif;font-weight:800;font-size:.95rem;cursor:pointer;transition:transform .2s,box-shadow .2s}
+.login-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,180,196,.4)}
+.login-err{color:var(--danger);font-size:.8rem;margin-top:.5rem;display:none}
+
+/* LAYOUT */
+#adminApp{display:none;min-height:100vh}
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:var(--sidebar-w);background:linear-gradient(180deg,var(--navy),#0d1a4a);z-index:100;overflow-y:auto;transition:transform .3s}
+.sidebar-logo{padding:1.5rem 1.2rem 1rem;border-bottom:1px solid rgba(255,255,255,.1);display:flex;align-items:center;gap:10px}
+.sidebar-logo span{font-family:'Nunito',sans-serif;font-weight:900;font-size:.95rem;color:#fff;line-height:1.2}
+.sidebar-logo .badge{background:linear-gradient(135deg,var(--teal),var(--teal-light));color:#fff;font-size:.65rem;padding:.15rem .5rem;border-radius:50px;font-weight:700}
+nav.sidebar-nav{padding:1rem 0}
+.nav-section{padding:.4rem 1.2rem;font-size:.65rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-top:.8rem}
+.nav-item{display:flex;align-items:center;gap:10px;padding:.7rem 1.2rem;color:rgba(255,255,255,.65);text-decoration:none;font-size:.84rem;font-weight:600;cursor:pointer;transition:all .2s;border:none;background:none;width:100%;text-align:left}
+.nav-item:hover,.nav-item.active{background:rgba(0,180,196,.15);color:#fff;border-right:3px solid var(--teal)}
+.nav-item .icon{font-size:1.1rem;width:22px;text-align:center}
+.sidebar-footer{padding:1rem 1.2rem;border-top:1px solid rgba(255,255,255,.1);margin-top:auto}
+
+/* MAIN */
+.main{margin-left:var(--sidebar-w);min-height:100vh}
+.topbar{background:#fff;padding:1rem 1.8rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--gray2);position:sticky;top:0;z-index:50;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.topbar-title{font-family:'Nunito',sans-serif;font-weight:900;font-size:1.1rem;color:var(--navy)}
+.topbar-right{display:flex;align-items:center;gap:1rem}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:.55rem 1.1rem;border-radius:10px;font-family:'Nunito',sans-serif;font-weight:800;font-size:.82rem;cursor:pointer;transition:all .2s;border:none;text-decoration:none}
+.btn-primary{background:linear-gradient(135deg,var(--teal),var(--teal-light));color:#fff;box-shadow:0 4px 12px rgba(0,180,196,.3)}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(0,180,196,.4)}
+.btn-orange{background:linear-gradient(135deg,var(--orange),var(--amber));color:#fff}
+.btn-danger{background:var(--danger);color:#fff}
+.btn-ghost{background:var(--gray);color:var(--text);border:1px solid var(--gray2)}
+.btn-ghost:hover{background:var(--gray2)}
+.btn-success{background:var(--success);color:#fff}
+
+/* CONTENT */
+.content{padding:1.8rem}
+.page{display:none}
+.page.active{display:block}
+
+/* CARDS */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem}
+.stat-card{background:#fff;border-radius:16px;padding:1.3rem;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.stat-card .sc-label{font-size:.75rem;color:var(--text-light);font-weight:600;margin-bottom:.3rem}
+.stat-card .sc-val{font-family:'Nunito',sans-serif;font-weight:900;font-size:1.7rem;color:var(--navy)}
+.stat-card .sc-icon{font-size:1.8rem;float:right;margin-top:-1.5rem}
+
+/* SECTION CARD */
+.section-card{background:#fff;border-radius:16px;padding:1.5rem;box-shadow:0 2px 12px rgba(0,0,0,.06);margin-bottom:1.2rem}
+.section-card h3{font-family:'Nunito',sans-serif;font-weight:900;font-size:1rem;color:var(--navy);margin-bottom:1rem;display:flex;align-items:center;gap:8px}
+.section-card h3 span{font-size:1.2rem}
+
+/* FORM */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.form-grid.three{grid-template-columns:1fr 1fr 1fr}
+.form-group{display:flex;flex-direction:column;gap:.3rem}
+.form-group.full{grid-column:1/-1}
+label{font-size:.78rem;font-weight:700;color:var(--text-light);text-transform:uppercase;letter-spacing:.05em}
+input[type="text"],input[type="url"],input[type="number"],input[type="password"],textarea,select{padding:.7rem .9rem;border:2px solid var(--gray2);border-radius:10px;font-size:.86rem;font-family:'Poppins',sans-serif;color:var(--text);outline:none;transition:border .2s;background:#fff;width:100%}
+input:focus,textarea:focus,select:focus{border-color:var(--teal)}
+textarea{resize:vertical;min-height:80px}
+.color-row{display:flex;align-items:center;gap:.7rem}
+input[type="color"]{width:40px;height:38px;padding:2px;border:2px solid var(--gray2);border-radius:8px;cursor:pointer}
+
+/* PRODUCT TABLE */
+.product-table{width:100%;border-collapse:collapse}
+.product-table th{text-align:left;padding:.7rem .9rem;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-light);background:var(--gray);border-bottom:2px solid var(--gray2)}
+.product-table td{padding:.8rem .9rem;border-bottom:1px solid var(--gray2);font-size:.85rem;vertical-align:middle}
+.product-table tr:hover td{background:#f9fbff}
+.prod-badge{display:inline-block;padding:.2rem .6rem;border-radius:6px;font-size:.7rem;font-weight:700}
+.badge-active{background:#dcfce7;color:#16a34a}
+.badge-inactive{background:#fef2f2;color:#dc2626}
+.emoji-preview{font-size:1.8rem;width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:var(--gray);border-radius:10px}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);z-index:500;display:none;align-items:center;justify-content:center;padding:1rem}
+.modal-overlay.open{display:flex}
+.modal{background:#fff;border-radius:20px;width:100%;max-width:600px;max-height:90vh;overflow-y:auto;box-shadow:0 32px 80px rgba(0,0,0,.2)}
+.modal-header{padding:1.3rem 1.5rem;border-bottom:1px solid var(--gray2);display:flex;align-items:center;justify-content:space-between}
+.modal-header h3{font-family:'Nunito',sans-serif;font-weight:900;font-size:1rem;color:var(--navy)}
+.modal-close{background:var(--gray);border:none;width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center}
+.modal-body{padding:1.5rem}
+.modal-footer{padding:1rem 1.5rem;border-top:1px solid var(--gray2);display:flex;gap:.7rem;justify-content:flex-end}
+
+/* TOAST */
+#toast{position:fixed;bottom:1.5rem;right:1.5rem;z-index:9999;background:var(--navy);color:#fff;padding:.8rem 1.3rem;border-radius:12px;font-size:.85rem;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.2);transform:translateY(100px);transition:transform .3s;pointer-events:none}
+#toast.show{transform:translateY(0)}
+#toast.success{background:var(--success)}
+#toast.error{background:var(--danger)}
+
+/* LIVE PREVIEW LINK */
+.preview-bar{background:linear-gradient(135deg,#e8f9fc,#fff8ee);border:1.5px solid rgba(0,180,196,.2);border-radius:12px;padding:1rem 1.3rem;display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem}
+.preview-bar span{font-size:.85rem;color:var(--text-light)}
+.preview-bar strong{color:var(--navy);font-weight:700}
+
+/* TAG INPUT */
+.tags-container{display:flex;flex-wrap:wrap;gap:.4rem;padding:.5rem;border:2px solid var(--gray2);border-radius:10px;min-height:44px;cursor:text;transition:border .2s}
+.tags-container:focus-within{border-color:var(--teal)}
+.tag-item{background:var(--gray);border:1px solid var(--gray2);padding:.2rem .6rem;border-radius:6px;font-size:.75rem;display:flex;align-items:center;gap:4px;color:var(--text)}
+.tag-item button{background:none;border:none;cursor:pointer;color:var(--text-light);font-size:.9rem;line-height:1;padding:0}
+.tags-input{border:none;outline:none;font-size:.82rem;font-family:'Poppins',sans-serif;min-width:100px;flex:1;padding:.1rem .2rem}
+
+/* SORTABLE */
+.sortable-handle{cursor:grab;color:var(--text-light);padding:0 .3rem;font-size:1.1rem}
+.sortable-handle:active{cursor:grabbing}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .main{margin-left:0}
+  .stats-row{grid-template-columns:1fr 1fr}
+  .form-grid{grid-template-columns:1fr}
+}
+
+/* TABS */
+.tabs{display:flex;gap:.5rem;margin-bottom:1.2rem;border-bottom:2px solid var(--gray2);padding-bottom:0}
+.tab-btn{padding:.6rem 1.1rem;border:none;background:none;font-family:'Nunito',sans-serif;font-weight:700;font-size:.85rem;color:var(--text-light);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .2s}
+.tab-btn.active{color:var(--teal-dark);border-bottom-color:var(--teal)}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">🖨️ Rananda Printing</div>
+    <div class="login-sub">Admin Panel — Masuk untuk mengelola website</div>
+    <input type="password" id="loginPass" placeholder="Password Admin" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="login-btn" onclick="doLogin()">Masuk ke Admin Panel</button>
+    <div class="login-err" id="loginErr">Password salah. Coba lagi.</div>
+    <div style="margin-top:1rem;font-size:.72rem;color:var(--text-light)">Default password: <strong>admin123</strong></div>
+  </div>
+</div>
+
+<!-- ADMIN APP -->
+<div id="adminApp">
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div style="font-size:1.5rem">🖨️</div>
+      <div>
+        <span>Rananda<br>Printing</span>
+        <div class="badge" style="margin-top:2px">ADMIN</div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section">Dashboard</div>
+      <button class="nav-item active" onclick="showPage('dashboard')"><span class="icon">📊</span> Dashboard</button>
+      
+      <div class="nav-section">Konten Utama</div>
+      <button class="nav-item" onclick="showPage('hero')"><span class="icon">🏠</span> Hero Section</button>
+      <button class="nav-item" onclick="showPage('marquee')"><span class="icon">📢</span> Marquee Text</button>
+      <button class="nav-item" onclick="showPage('stats')"><span class="icon">📈</span> Statistik</button>
+      
+      <div class="nav-section">Layanan & Produk</div>
+      <button class="nav-item" onclick="showPage('services')"><span class="icon">🎯</span> Layanan</button>
+      <button class="nav-item" onclick="showPage('products')"><span class="icon">🖼️</span> Produk</button>
+      
+      <div class="nav-section">Halaman</div>
+      <button class="nav-item" onclick="showPage('how')"><span class="icon">📋</span> Cara Kerja</button>
+      <button class="nav-item" onclick="showPage('why')"><span class="icon">💡</span> Kenapa Kami</button>
+      <button class="nav-item" onclick="showPage('testimonials')"><span class="icon">💬</span> Testimoni</button>
+      <button class="nav-item" onclick="showPage('cta')"><span class="icon">🎁</span> CTA Banner</button>
+      <button class="nav-item" onclick="showPage('footer')"><span class="icon">🔗</span> Footer & Kontak</button>
+      
+      <div class="nav-section">Pengaturan</div>
+      <button class="nav-item" onclick="showPage('settings')"><span class="icon">⚙️</span> Pengaturan Umum</button>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="nav-item" onclick="doLogout()" style="color:rgba(255,100,100,.8)"><span class="icon">🚪</span> Keluar</button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div style="display:flex;align-items:center;gap:.8rem">
+        <button onclick="document.getElementById('sidebar').classList.toggle('open')" style="display:none;background:none;border:none;font-size:1.4rem;cursor:pointer" id="menuToggle">☰</button>
+        <div class="topbar-title" id="pageTitle">Dashboard</div>
+      </div>
+      <div class="topbar-right">
+        <a href="index.html" target="_blank" class="btn btn-ghost">👁️ Lihat Website</a>
+        <button class="btn btn-primary" onclick="saveAll()">💾 Simpan Semua</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="preview-bar">
+          <button class="btn btn-ghost" onclick="exportJSON()">📤 Export JSON</button>
+          <button class="btn btn-ghost" onclick="importJSON()">📥 Import JSON</button>
+        </div>
+      </div>
+
+      <!-- DASHBOARD -->
+      <div class="page active" id="page-dashboard">
+        <div class="stats-row">
+          <div class="stat-card"><div class="sc-label">Total Produk</div><div class="sc-val" id="dash-products">0</div><div class="sc-icon">🖼️</div></div>
+          <div class="stat-card"><div class="sc-label">Total Layanan</div><div class="sc-val" id="dash-services">0</div><div class="sc-icon">🎯</div></div>
+          <div class="stat-card"><div class="sc-label">Testimoni</div><div class="sc-val" id="dash-testi">0</div><div class="sc-icon">💬</div></div>
+          <div class="stat-card"><div class="sc-label">Langkah Cara Kerja</div><div class="sc-val" id="dash-steps">0</div><div class="sc-icon">📋</div></div>
+        </div>
+        <div class="section-card">
+          <h3><span>🚀</span> Quick Actions</h3>
+          <div style="display:flex;flex-wrap:wrap;gap:.7rem">
+            <button class="btn btn-primary" onclick="showPage('products');openProductModal()">➕ Tambah Produk</button>
+            <button class="btn btn-orange" onclick="showPage('services');openServiceModal()">➕ Tambah Layanan</button>
+            <button class="btn btn-ghost" onclick="showPage('testimonials');openTestiModal()">➕ Tambah Testimoni</button>
+            <button class="btn btn-ghost" onclick="exportJSON()">📤 Export Data</button>
+            <a href="index.html" target="_blank" class="btn btn-success">👁️ Preview Landing Page</a>
+            <a href="products.html" target="_blank" class="btn btn-success">👁️ Preview Halaman Produk</a>
+          </div>
+        </div>
+        <div class="section-card">
+          <h3><span>💡</span> Panduan Penggunaan</h3>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+            <div style="background:var(--gray);border-radius:12px;padding:1rem">
+              <div style="font-weight:700;font-size:.88rem;margin-bottom:.5rem">📝 Cara Edit Konten</div>
+              <div style="font-size:.8rem;color:var(--text-light);line-height:1.7">Pilih menu di sidebar → Edit konten → Klik "Simpan Semua". Perubahan langsung tampil di website.</div>
+            </div>
+            <div style="background:var(--gray);border-radius:12px;padding:1rem">
+              <div style="font-weight:700;font-size:.88rem;margin-bottom:.5rem">🌐 Deploy ke GitHub Pages</div>
+              <div style="font-size:.8rem;color:var(--text-light);line-height:1.7">Export JSON → Simpan sebagai <code>data.json</code> di folder project → Push ke GitHub → Aktifkan GitHub Pages.</div>
+            </div>
+            <div style="background:var(--gray);border-radius:12px;padding:1rem">
+              <div style="font-weight:700;font-size:.88rem;margin-bottom:.5rem">🔑 Ganti Password</div>
+              <div style="font-size:.8rem;color:var(--text-light);line-height:1.7">Buka menu "Pengaturan" → Ganti password admin. Jangan lupa simpan!</div>
+            </div>
+            <div style="background:var(--gray);border-radius:12px;padding:1rem">
+              <div style="font-weight:700;font-size:.88rem;margin-bottom:.5rem">📦 Produk Banyak</div>
+              <div style="font-size:.8rem;color:var(--text-light);line-height:1.7">Landing page tampilkan 6 produk featured. Semua produk tampil di <code>products.html</code>. Tandai "Featured" untuk tampil di home.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- HERO -->
+      <div class="page" id="page-hero">
+        <div class="section-card">
+          <h3><span>🏠</span> Hero Section</h3>
+          <div class="form-grid">
+            <div class="form-group full"><label>Badge Text (teks kecil di atas judul)</label><input type="text" id="hero_badge" placeholder="Percetakan Terpercaya Indonesia"></div>
+            <div class="form-group full"><label>Judul Baris 1</label><input type="text" id="hero_title1" placeholder="Cetak"></div>
+            <div class="form-group full"><label>Judul Highlight Teal (gradien teal)</label><input type="text" id="hero_title_teal" placeholder="Kualitas Premium"></div>
+            <div class="form-group full"><label>Judul Baris 2 + Highlight Fire (gradien oranye)</label>
+              <div style="display:flex;gap:.5rem">
+                <input type="text" id="hero_title2" placeholder="Harga" style="flex:1">
+                <input type="text" id="hero_title_fire" placeholder="Terjangkau!" style="flex:1">
+              </div>
+            </div>
+            <div class="form-group full"><label>Subtitle / Deskripsi</label><textarea id="hero_sub" rows="3" placeholder="Deskripsi singkat tentang bisnis..."></textarea></div>
+            <div class="form-group"><label>Tombol Utama (CTA 1)</label><input type="text" id="hero_btn1_text" placeholder="🎁 Request Sample Gratis"></div>
+            <div class="form-group"><label>Link WA Tombol Utama</label><input type="text" id="hero_btn1_wa" placeholder="6285318182400"></div>
+            <div class="form-group"><label>Tombol Sekunder (CTA 2)</label><input type="text" id="hero_btn2_text" placeholder="Lihat Layanan ✦"></div>
+            <div class="form-group"><label>Nomor WhatsApp Utama (tanpa +)</label><input type="text" id="wa_number" placeholder="6285318182400"></div>
+          </div>
+        </div>
+        <div class="section-card">
+          <h3><span>🏷️</span> Chip Floating (4 chip di hero)</h3>
+          <div id="chips-editor"></div>
+          <button class="btn btn-ghost" style="margin-top:.7rem" onclick="addChip()">➕ Tambah Chip</button>
+        </div>
+      </div>
+
+      <!-- MARQUEE -->
+      <div class="page" id="page-marquee">
+        <div class="section-card">
+          <h3><span>📢</span> Marquee / Ticker Teks</h3>
+          <p style="font-size:.83rem;color:var(--text-light);margin-bottom:1rem">Teks yang bergerak di bawah hero. Tambah/hapus item sesuai kebutuhan.</p>
+          <div id="marquee-editor"></div>
+          <button class="btn btn-ghost" style="margin-top:.7rem" onclick="addMarqueeItem()">➕ Tambah Item</button>
+        </div>
+      </div>
+
+      <!-- STATS -->
+      <div class="page" id="page-stats">
+        <div class="section-card">
+          <h3><span>📈</span> Statistik Hero</h3>
+          <div id="stats-editor"></div>
+          <button class="btn btn-ghost" style="margin-top:.7rem" onclick="addStat()">➕ Tambah Statistik</button>
+        </div>
+      </div>
+
+      <!-- SERVICES -->
+      <div class="page" id="page-services">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+          <div>
+            <div style="font-family:'Nunito',sans-serif;font-weight:900;font-size:1.1rem;color:var(--navy)">Kelola Layanan</div>
+            <div style="font-size:.8rem;color:var(--text-light)">Layanan ditampilkan di halaman utama</div>
+          </div>
+          <button class="btn btn-primary" onclick="openServiceModal()">➕ Tambah Layanan</button>
+        </div>
+        <div class="section-card" style="padding:0;overflow:hidden">
+          <table class="product-table">
+            <thead><tr><th>Icon</th><th>Nama Layanan</th><th>Deskripsi</th><th>Tags</th><th>WA Text</th><th>Aksi</th></tr></thead>
+            <tbody id="services-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- PRODUCTS -->
+      <div class="page" id="page-products">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+          <div>
+            <div style="font-family:'Nunito',sans-serif;font-weight:900;font-size:1.1rem;color:var(--navy)">Kelola Produk</div>
+            <div style="font-size:.8rem;color:var(--text-light)">Produk "Featured" tampil di homepage (maks 6). Semua produk tampil di products.html</div>
+          </div>
+          <button class="btn btn-primary" onclick="openProductModal()">➕ Tambah Produk</button>
+        </div>
+        <div class="section-card" style="padding:0;overflow:hidden">
+          <table class="product-table">
+            <thead><tr><th>Icon/Emoji</th><th>Nama Produk</th><th>Deskripsi</th><th>Kategori</th><th>Featured</th><th>Aksi</th></tr></thead>
+            <tbody id="products-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- HOW -->
+      <div class="page" id="page-how">
+        <div class="section-card">
+          <h3><span>📋</span> Section Header - Cara Kerja</h3>
+          <div class="form-grid">
+            <div class="form-group"><label>Tag</label><input type="text" id="how_tag" placeholder="📋 Cara Kerja"></div>
+            <div class="form-group"><label>Judul</label><input type="text" id="how_title" placeholder="Pesan Gampang, Terima Cepat"></div>
+            <div class="form-group full"><label>Subtitle</label><input type="text" id="how_sub" placeholder="Deskripsi..."></div>
+          </div>
+        </div>
+        <div class="section-card">
+          <h3><span>🔢</span> Langkah-Langkah</h3>
+          <div id="steps-editor"></div>
+          <button class="btn btn-ghost" style="margin-top:.7rem" onclick="addStep()">➕ Tambah Langkah</button>
+        </div>
+      </div>
+
+      <!-- WHY -->
+      <div class="page" id="page-why">
+        <div class="section-card">
+          <h3><span>💡</span> Section Header - Kenapa Kami</h3>
+          <div class="form-grid">
+            <div class="form-group"><label>Tag</label><input type="text" id="why_tag" placeholder="💡 Kenapa Kami"></div>
+            <div class="form-group"><label>Judul</label><input type="text" id="why_title" placeholder="Kualitas Premium, Harga Bersahabat"></div>
+            <div class="form-group full"><label>Subtitle</label><textarea id="why_sub" rows="2"></textarea></div>
+          </div>
+        </div>
+        <div class="section-card">
+          <h3><span>✅</span> Keunggulan (Features)</h3>
+          <div id="feats-editor"></div>
+          <button class="btn btn-ghost" style="margin-top:.7rem" onclick="addFeat()">➕ Tambah Keunggulan</button>
+        </div>
+        <div class="section-card">
+          <h3><span>📊</span> Kartu Statistik (Stat Card)</h3>
+          <div id="statcard-editor"></div>
+          <button class="btn btn-ghost" style="margin-top:.7rem" onclick="addStatCard()">➕ Tambah Item</button>
+        </div>
+      </div>
+
+      <!-- TESTIMONIALS -->
+      <div class="page" id="page-testimonials">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+          <div style="font-family:'Nunito',sans-serif;font-weight:900;font-size:1.1rem;color:var(--navy)">Kelola Testimoni</div>
+          <button class="btn btn-primary" onclick="openTestiModal()">➕ Tambah Testimoni</button>
+        </div>
+        <div class="section-card" style="padding:0;overflow:hidden">
+          <table class="product-table">
+            <thead><tr><th>Avatar</th><th>Nama</th><th>Asal</th><th>Kutipan</th><th>Bintang</th><th>Aksi</th></tr></thead>
+            <tbody id="testi-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div class="page" id="page-cta">
+        <div class="section-card">
+          <h3><span>🎁</span> CTA Banner</h3>
+          <div class="form-grid">
+            <div class="form-group"><label>Tag</label><input type="text" id="cta_tag" placeholder="🎁 Penawaran Spesial"></div>
+            <div class="form-group"><label>Judul</label><input type="text" id="cta_title" placeholder="Coba Dulu Gratis, Baru Order!"></div>
+            <div class="form-group full"><label>Deskripsi</label><textarea id="cta_desc" rows="2"></textarea></div>
+            <div class="form-group"><label>Teks Tombol WA</label><input type="text" id="cta_btn_wa" placeholder="💬 Request Sample via WhatsApp"></div>
+            <div class="form-group"><label>WA Message</label><input type="text" id="cta_wa_msg" placeholder="Halo Rananda Printing!..."></div>
+            <div class="form-group"><label>Teks Tombol 2</label><input type="text" id="cta_btn2" placeholder="Lihat Semua Layanan"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FOOTER -->
+      <div class="page" id="page-footer">
+        <div class="section-card">
+          <h3><span>🏢</span> Info Perusahaan</h3>
+          <div class="form-grid">
+            <div class="form-group"><label>Nama Perusahaan</label><input type="text" id="company_name" placeholder="Rananda Printing"></div>
+            <div class="form-group"><label>Tagline Footer</label><input type="text" id="company_tagline" placeholder="Solusi cetak digital terlengkap..."></div>
+            <div class="form-group"><label>Email</label><input type="text" id="contact_email" placeholder="info@ranandaprinting.com"></div>
+            <div class="form-group"><label>Nomor WA (tanpa +)</label><input type="text" id="contact_wa" placeholder="6285318182400"></div>
+            <div class="form-group"><label>Alamat</label><input type="text" id="contact_address" placeholder="Jakarta, Indonesia"></div>
+            <div class="form-group"><label>Jam Operasional</label><input type="text" id="contact_hours" placeholder="Senin–Sabtu, 08.00–17.00"></div>
+          </div>
+        </div>
+        <div class="section-card">
+          <h3><span>🔗</span> Link Sosial Media</h3>
+          <div class="form-grid">
+            <div class="form-group"><label>Instagram URL</label><input type="text" id="social_ig" placeholder="https://instagram.com/ranandaprinting"></div>
+            <div class="form-group"><label>Facebook URL</label><input type="text" id="social_fb" placeholder="https://facebook.com/ranandaprinting"></div>
+            <div class="form-group"><label>TikTok URL</label><input type="text" id="social_tiktok" placeholder="https://tiktok.com/@ranandaprinting"></div>
+            <div class="form-group"><label>Shopee URL</label><input type="text" id="social_shopee" placeholder="https://shopee.co.id/ranandaprinting"></div>
+          </div>
+        </div>
+        <div class="section-card">
+          <h3><span>📃</span> Copyright</h3>
+          <div class="form-group"><label>Teks Copyright</label><input type="text" id="copyright_text" placeholder="© 2025 Rananda Printing. All rights reserved."></div>
+        </div>
+      </div>
+
+      <!-- SETTINGS -->
+      <div class="page" id="page-settings">
+        <div class="section-card">
+          <h3><span>⚙️</span> Pengaturan Umum</h3>
+          <div class="form-grid">
+            <div class="form-group"><label>Nama Website (Title)</label><input type="text" id="site_title" placeholder="Rananda Printing – Digital Printing & Laser Cutting"></div>
+            <div class="form-group"><label>Deskripsi Meta</label><input type="text" id="site_desc" placeholder="Percetakan digital terpercaya..."></div>
+          </div>
+        </div>
+        <div class="section-card">
+          <h3><span>🔑</span> Ganti Password Admin</h3>
+          <div class="form-grid">
+            <div class="form-group"><label>Password Lama</label><input type="password" id="old_pass" placeholder="Password saat ini"></div>
+            <div class="form-group"><label>Password Baru</label><input type="password" id="new_pass" placeholder="Password baru"></div>
+            <div class="form-group"><label>Konfirmasi Password Baru</label><input type="password" id="confirm_pass" placeholder="Ulangi password baru"></div>
+          </div>
+          <button class="btn btn-orange" style="margin-top:1rem" onclick="changePassword()">🔑 Ganti Password</button>
+        </div>
+        <div class="section-card">
+          <h3><span>🗑️</span> Reset Data</h3>
+          <p style="font-size:.83rem;color:var(--text-light);margin-bottom:1rem">Reset semua data ke pengaturan default. Tindakan ini tidak bisa dibatalkan!</p>
+          <button class="btn btn-danger" onclick="resetAllData()">🗑️ Reset Semua Data ke Default</button>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /adminApp -->
+
+<!-- MODALS -->
+<div class="modal-overlay" id="productModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="productModalTitle">Tambah Produk</h3>
+      <button class="modal-close" onclick="closeModal('productModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="prod_id">
+      <div class="form-grid">
+        <div class="form-group"><label>Emoji / Icon</label><input type="text" id="prod_emoji" placeholder="🖨️"></div>
+        <div class="form-group"><label>Warna Background</label>
+          <select id="prod_color">
+            <option value="pi-1">Biru Muda (Teal)</option>
+            <option value="pi-2">Oranye Muda</option>
+            <option value="pi-3">Biru</option>
+            <option value="pi-4">Hijau</option>
+            <option value="pi-5">Kuning</option>
+            <option value="pi-6">Ungu</option>
+          </select>
+        </div>
+        <div class="form-group full"><label>Nama Produk</label><input type="text" id="prod_name" placeholder="Banner Full Color"></div>
+        <div class="form-group full"><label>Deskripsi Singkat</label><input type="text" id="prod_desc" placeholder="Cetak tajam, tahan UV & air..."></div>
+        <div class="form-group full"><label>Deskripsi Panjang (untuk halaman produk)</label><textarea id="prod_desc_long" placeholder="Deskripsi detail produk untuk halaman products.html..."></textarea></div>
+        <div class="form-group"><label>Kategori</label><input type="text" id="prod_category" placeholder="Digital Printing"></div>
+        <div class="form-group"><label>WA Message saat Order</label><input type="text" id="prod_wa_msg" placeholder="Saya mau pesan Banner Full Color..."></div>
+        <div class="form-group full">
+          <label>Featured di Homepage?</label>
+          <label style="display:flex;align-items:center;gap:.5rem;cursor:pointer;font-size:.9rem;text-transform:none;letter-spacing:0;color:var(--text);font-weight:600">
+            <input type="checkbox" id="prod_featured" style="width:18px;height:18px"> Tampilkan di homepage (maks 6)
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('productModal')">Batal</button>
+      <button class="btn btn-primary" onclick="saveProduct()">💾 Simpan Produk</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="serviceModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="serviceModalTitle">Tambah Layanan</h3>
+      <button class="modal-close" onclick="closeModal('serviceModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="svc_id">
+      <div class="form-grid">
+        <div class="form-group"><label>Emoji / Icon</label><input type="text" id="svc_icon" placeholder="🖨️"></div>
+        <div class="form-group"><label>Warna Icon</label>
+          <select id="svc_color">
+            <option value="si-teal">Teal</option>
+            <option value="si-orange">Oranye</option>
+            <option value="si-amber">Amber</option>
+            <option value="si-green">Hijau</option>
+            <option value="si-pink">Pink</option>
+            <option value="si-purple">Ungu</option>
+          </select>
+        </div>
+        <div class="form-group full"><label>Nama Layanan</label><input type="text" id="svc_name" placeholder="Digital Printing"></div>
+        <div class="form-group full"><label>Deskripsi</label><textarea id="svc_desc" rows="3" placeholder="Deskripsi layanan..."></textarea></div>
+        <div class="form-group full">
+          <label>Tags (tekan Enter untuk tambah)</label>
+          <div class="tags-container" id="svc_tags_container">
+            <input class="tags-input" id="svc_tags_input" placeholder="Ketik tag, tekan Enter..." onkeydown="addSvcTag(event)">
+          </div>
+          <input type="hidden" id="svc_tags_data">
+        </div>
+        <div class="form-group full"><label>Teks WA (pesan otomatis)</label><input type="text" id="svc_wa_msg" placeholder="Halo, saya tertarik Digital Printing."></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('serviceModal')">Batal</button>
+      <button class="btn btn-primary" onclick="saveService()">💾 Simpan Layanan</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="testiModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="testiModalTitle">Tambah Testimoni</h3>
+      <button class="modal-close" onclick="closeModal('testiModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="testi_id">
+      <div class="form-grid">
+        <div class="form-group"><label>Nama</label><input type="text" id="testi_name" placeholder="Andi Pratama"></div>
+        <div class="form-group"><label>Asal (jabatan/kota)</label><input type="text" id="testi_from" placeholder="Pemilik Toko, Jakarta"></div>
+        <div class="form-group"><label>Huruf Avatar</label><input type="text" id="testi_avatar" placeholder="A" maxlength="2"></div>
+        <div class="form-group"><label>Warna Avatar</label>
+          <select id="testi_color">
+            <option value="av1">Teal</option>
+            <option value="av2">Oranye</option>
+            <option value="av3">Ungu</option>
+          </select>
+        </div>
+        <div class="form-group full"><label>Kutipan / Review</label><textarea id="testi_quote" rows="4" placeholder="Kualitas produknya luar biasa..."></textarea></div>
+        <div class="form-group"><label>Rating Bintang (1-5)</label><input type="number" id="testi_stars" min="1" max="5" value="5"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('testiModal')">Batal</button>
+      <button class="btn btn-primary" onclick="saveTestimoni()">💾 Simpan Testimoni</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<!-- HIDDEN FILE INPUT FOR IMPORT -->
+<input type="file" id="importFile" accept=".json" style="display:none" onchange="handleImport(event)">
+
+<script>
+// ========== STATE ==========
+const ADMIN_PASS_KEY = 'rp_admin_pass';
+const DATA_KEY = 'rp_data';
+
+const DEFAULT_DATA = {
+  site: { title: 'Rananda Printing – Digital Printing & Laser Cutting', desc: 'Percetakan digital terpercaya Indonesia' },
+  hero: {
+    badge: 'Percetakan Terpercaya Indonesia',
+    title1: 'Cetak', title_teal: 'Kualitas Premium',
+    title2: 'Harga', title_fire: 'Terjangkau!',
+    sub: 'Digital Printing, Laser Cutting, UV Akrilik, dan ratusan produk cetak lainnya. Kualitas bintang 5, harga bersahabat, pengerjaan super cepat!',
+    btn1_text: '🎁 Request Sample Gratis', btn1_wa: '6285318182400',
+    btn2_text: 'Lihat Layanan ✦'
+  },
+  wa_number: '6285318182400',
+  chips: [
+    { icon: '🖨️', title: 'Digital Printing', sub: 'Banner, Brosur, Stiker' },
+    { icon: '⚡', title: 'Laser Cutting', sub: 'Presisi Tinggi' },
+    { icon: '✨', title: 'UV Akrilik', sub: 'Glossy Premium' },
+    { icon: '🚀', title: 'Express 3 Hari', sub: 'Siap dikirim!' }
+  ],
+  marquee: ['Digital Printing','Laser Cutting','UV Akrilik','Banner & Spanduk','Stiker Custom','Neon Box LED','Merchandise','Sample Gratis'],
+  stats: [
+    { num: '500+', label: 'Klien Puas' },
+    { num: '10000+', label: 'Produk Selesai' },
+    { num: '3 Hari', label: 'Express Order' }
+  ],
+  services: [
+    { id: 1, icon: '🖨️', color: 'si-teal', name: 'Digital Printing', desc: 'Cetak berkualitas tinggi untuk semua kebutuhan promosi. Warna tajam, detail presisi, tahan lama.', tags: ['Banner & Spanduk','Brosur & Flyer','Poster','Kartu Nama','Kalender'], wa_msg: 'Halo, saya tertarik Digital Printing.' },
+    { id: 2, icon: '⚡', color: 'si-orange', name: 'Laser Cutting & Engraving', desc: 'Teknologi laser presisi tinggi untuk pemotongan dan ukiran detail. Akurasi hingga 0.1mm.', tags: ['Akrilik','MDF / Kayu','Karet','Custom Shape','Ukiran Logo'], wa_msg: 'Halo, saya tertarik Laser Cutting.' },
+    { id: 3, icon: '✨', color: 'si-amber', name: 'UV Printing Akrilik', desc: 'Cetak langsung di atas akrilik dengan teknologi UV. Warna super cerah, efek glossy premium.', tags: ['Plakat Akrilik','Photo Acrylic','Signage','Award & Trophy'], wa_msg: 'Halo, saya tertarik UV Akrilik.' },
+    { id: 4, icon: '🏷️', color: 'si-green', name: 'Stiker & Label Custom', desc: 'Berbagai jenis stiker custom untuk branding produk, kemasan, dan dekorasi. Tahan air dan UV.', tags: ['Stiker Vinyl','Label Produk','Transparan','Die Cut'], wa_msg: 'Halo, saya tertarik Stiker Custom.' },
+    { id: 5, icon: '👕', color: 'si-pink', name: 'Cetak Merchandise', desc: 'Kustomisasi merchandise branded untuk event, corporate gift, atau merchandise toko.', tags: ['Mug Print','Tote Bag','Pin & Badge','Gantungan Kunci'], wa_msg: 'Halo, saya tertarik Merchandise Custom.' },
+    { id: 6, icon: '🔆', color: 'si-purple', name: 'Neon Box & Signage', desc: 'Signage, neon box LED, dan papan nama berkualitas untuk toko, kantor, dan branding bisnis Anda.', tags: ['Neon Box LED','Letter Timbul','Papan Nama','Backlit Sign'], wa_msg: 'Halo, saya tertarik Neon Box.' }
+  ],
+  products: [
+    { id: 1, emoji: '🖼️', color: 'pi-1', name: 'Banner Full Color', desc: 'Cetak tajam, tahan UV & air, berbagai ukuran', desc_long: 'Banner full color dengan kualitas cetak terbaik. Tahan air, tahan UV, dan tersedia dalam berbagai ukuran.', category: 'Digital Printing', wa_msg: 'Saya mau pesan Banner Full Color.', featured: true },
+    { id: 2, emoji: '⚡', color: 'pi-2', name: 'Laser Cut Akrilik', desc: 'Presisi tinggi, hasil rapi & detail sempurna', desc_long: 'Laser cutting akrilik dengan presisi tinggi. Cocok untuk plakat, display, dekorasi, dan souvenir.', category: 'Laser Cutting', wa_msg: 'Saya mau pesan Laser Cut Akrilik.', featured: true },
+    { id: 3, emoji: '✨', color: 'pi-3', name: 'Plakat UV Akrilik', desc: 'Premium, glossy, cocok untuk penghargaan', desc_long: 'Plakat UV akrilik premium dengan efek glossy yang elegan. Ideal untuk award, trophy, dan penghargaan.', category: 'UV Akrilik', wa_msg: 'Saya mau pesan Plakat UV Akrilik.', featured: true },
+    { id: 4, emoji: '🏷️', color: 'pi-4', name: 'Stiker Die Cut Custom', desc: 'Bentuk bebas, tahan air, warna pop & awet', desc_long: 'Stiker die cut custom dengan bentuk bebas sesuai desain Anda. Tahan air, tahan sinar UV, warna vivid.', category: 'Stiker', wa_msg: 'Saya mau pesan Stiker Die Cut.', featured: true },
+    { id: 5, emoji: '🎁', color: 'pi-5', name: 'Merchandise Branded', desc: 'Mug, tote bag, pin — branding yang sempurna', desc_long: 'Merchandise branded untuk corporate gift, event, dan promosi. Mug, tote bag, pin, gantungan kunci, dan lainnya.', category: 'Merchandise', wa_msg: 'Saya mau pesan Merchandise.', featured: true },
+    { id: 6, emoji: '🔆', color: 'pi-6', name: 'Neon Box LED', desc: 'Eye-catching, terang, tahan lama untuk toko', desc_long: 'Neon box LED berkualitas tinggi untuk toko, restoran, dan kantor. Terang, hemat energi, dan tahan lama.', category: 'Signage', wa_msg: 'Saya mau pesan Neon Box.', featured: true }
+  ],
+  how: {
+    tag: '📋 Cara Kerja', title: 'Pesan Gampang, Terima Cepat', sub: 'Proses simpel & transparan dari konsultasi hingga produk tiba di tangan Anda.',
+    steps: [
+      { num: '01', title: '💬 Konsultasi via WhatsApp', desc: 'Hubungi kami lewat WA, ceritakan kebutuhan Anda — jenis produk, ukuran, jumlah, dan desain.' },
+      { num: '02', title: '📐 Kirim File Desain', desc: 'Upload file desain (AI, CDR, PDF, PNG, JPG). Belum punya desain? Tim kreatif kami siap bantu.' },
+      { num: '03', title: '✅ Konfirmasi & Pembayaran', desc: 'Kami kirimkan penawaran harga & estimasi waktu. Setelah setuju, lakukan pembayaran.' },
+      { num: '04', title: '🔨 Proses Produksi', desc: 'Tim kami memproses dengan mesin modern. Anda akan dapat update progress berkala via WhatsApp.' },
+      { num: '05', title: '🚀 Kirim ke Seluruh Indonesia', desc: 'Produk siap dikirim ke seluruh Indonesia dengan packing aman & rapi.' }
+    ]
+  },
+  why: {
+    tag: '💡 Kenapa Kami', title: 'Kualitas Premium, Harga Bersahabat',
+    sub: 'Kami bukan sekadar percetakan biasa. Kami adalah mitra branding Anda.',
+    feats: [
+      { icon: '⚡', title: 'Mesin Generasi Terbaru', desc: 'Teknologi digital printing dan laser cutting terkini untuk hasil cetak yang tajam dan presisi.' },
+      { icon: '🎨', title: 'Tim Desainer Profesional', desc: 'Belum punya desain? Tim kreatif kami siap mewujudkan desain impian Anda.' },
+      { icon: '🚀', title: 'Express 3 Hari Kerja', desc: 'Butuh cepat? Layanan express kami siap menyelesaikan pesanan tanpa mengorbankan kualitas.' },
+      { icon: '💰', title: 'Harga Transparan & Bersaing', desc: 'Tidak ada biaya tersembunyi. Penawaran jelas dan kompetitif untuk semua skala pesanan.' }
+    ],
+    stat_cards: [
+      { num: '500+', label: 'Klien Puas' },
+      { num: '10K+', label: 'Produk Selesai' },
+      { num: '3 Hr', label: 'Express Order' },
+      { num: '5★', label: 'Rating Rata-rata' }
+    ]
+  },
+  testimonials: [
+    { id: 1, name: 'Andi Pratama', from: 'Pemilik Toko Pakaian, Jakarta', avatar: 'A', color: 'av1', quote: 'Kualitas banner-nya luar biasa! Warnanya tajam dan tidak pudar meski kena hujan. Sudah langganan 2 tahun!', stars: 5 },
+    { id: 2, name: 'Sari Dewi', from: 'Event Organizer, Surabaya', avatar: 'S', color: 'av2', quote: 'Laser cutting akrilik-nya rapi banget, presisi dan super detail. Highly recommended!', stars: 5 },
+    { id: 3, name: 'Rizky Ramadhan', from: 'Brand Owner UMKM, Bandung', avatar: 'R', color: 'av3', quote: 'Order stiker 1000 pcs, selesai tepat waktu dan kualitasnya konsisten. Harganya juga paling bersaing!', stars: 5 }
+  ],
+  cta: {
+    tag: '🎁 Penawaran Spesial', title: 'Coba Dulu Gratis, Baru Order!',
+    desc: 'Kami percaya kualitas kami. Request sample gratis sekarang dan rasakan sendiri standar premium Rananda Printing.',
+    btn_wa: '💬 Request Sample via WhatsApp', wa_msg: 'Halo Rananda Printing! Saya ingin request sample gratis.',
+    btn2: 'Lihat Semua Layanan'
+  },
+  footer: {
+    company_name: 'Rananda Printing', company_tagline: 'Solusi cetak digital terlengkap untuk bisnis dan personal Anda. Kualitas premium, harga terjangkau.',
+    email: 'info@ranandaprinting.com', wa: '6285318182400', address: 'Jakarta, Indonesia', hours: 'Senin–Sabtu, 08.00–17.00',
+    social: { ig: '#', fb: '#', tiktok: '#', shopee: '#' },
+    copyright: '© 2025 Rananda Printing. All rights reserved.'
+  }
+};
+
+let data = {};
+
+// ========== AUTH ==========
+function getPass() { return localStorage.getItem(ADMIN_PASS_KEY) || 'admin123'; }
+function doLogin() {
+  const p = document.getElementById('loginPass').value;
+  if (p === getPass()) {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('adminApp').style.display = 'block';
+    loadData(); initApp();
+  } else {
+    document.getElementById('loginErr').style.display = 'block';
+  }
+}
+function doLogout() { location.reload(); }
+function changePassword() {
+  const op = document.getElementById('old_pass').value;
+  const np = document.getElementById('new_pass').value;
+  const cp = document.getElementById('confirm_pass').value;
+  if (op !== getPass()) return showToast('Password lama salah!','error');
+  if (np !== cp) return showToast('Konfirmasi password tidak sama!','error');
+  if (np.length < 6) return showToast('Password minimal 6 karakter!','error');
+  localStorage.setItem(ADMIN_PASS_KEY, np);
+  showToast('Password berhasil diubah!','success');
+  ['old_pass','new_pass','confirm_pass'].forEach(id => document.getElementById(id).value = '');
+}
+
+// ========== DATA ==========
+function loadData() {
+  const saved = localStorage.getItem(DATA_KEY);
+  data = saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(DEFAULT_DATA));
+}
+function saveData() { localStorage.setItem(DATA_KEY, JSON.stringify(data)); }
+function resetAllData() {
+  if (!confirm('Reset semua data ke default? Tidak bisa dibatalkan!')) return;
+  data = JSON.parse(JSON.stringify(DEFAULT_DATA));
+  saveData(); initApp();
+  showToast('Data direset ke default!','success');
+}
+
+// ========== INIT ==========
+function initApp() {
+  updateDashboard();
+  loadHeroFields();
+  loadMarquee();
+  loadStats();
+  loadServices();
+  loadProducts();
+  loadHow();
+  loadWhy();
+  loadTestimonials();
+  loadCta();
+  loadFooter();
+  loadSettings();
+}
+
+function updateDashboard() {
+  document.getElementById('dash-products').textContent = data.products.length;
+  document.getElementById('dash-services').textContent = data.services.length;
+  document.getElementById('dash-testi').textContent = data.testimonials.length;
+  document.getElementById('dash-steps').textContent = data.how.steps.length;
+}
+
+// ========== PAGES ==========
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => {
+    if (n.getAttribute('onclick')?.includes("'"+id+"'")) n.classList.add('active');
+  });
+  const titles = { dashboard:'Dashboard', hero:'Hero Section', marquee:'Marquee Teks', stats:'Statistik', services:'Kelola Layanan', products:'Kelola Produk', how:'Cara Kerja', why:'Kenapa Kami', testimonials:'Testimoni', cta:'CTA Banner', footer:'Footer & Kontak', settings:'Pengaturan' };
+  document.getElementById('pageTitle').textContent = titles[id] || id;
+}
+
+// ========== SAVE ALL ==========
+function saveAll() {
+  // hero
+  const h = data.hero;
+  h.badge = v('hero_badge'); h.title1 = v('hero_title1'); h.title_teal = v('hero_title_teal');
+  h.title2 = v('hero_title2'); h.title_fire = v('hero_title_fire'); h.sub = v('hero_sub');
+  h.btn1_text = v('hero_btn1_text'); h.btn1_wa = v('hero_btn1_wa'); h.btn2_text = v('hero_btn2_text');
+  data.wa_number = v('wa_number');
+
+  // how
+  data.how.tag = v('how_tag'); data.how.title = v('how_title'); data.how.sub = v('how_sub');
+  // why
+  data.why.tag = v('why_tag'); data.why.title = v('why_title'); data.why.sub = v('why_sub');
+  // cta
+  const c = data.cta;
+  c.tag = v('cta_tag'); c.title = v('cta_title'); c.desc = v('cta_desc');
+  c.btn_wa = v('cta_btn_wa'); c.wa_msg = v('cta_wa_msg'); c.btn2 = v('cta_btn2');
+  // footer
+  const f = data.footer;
+  f.company_name = v('company_name'); f.company_tagline = v('company_tagline');
+  f.email = v('contact_email'); f.wa = v('contact_wa'); f.address = v('contact_address'); f.hours = v('contact_hours');
+  f.social.ig = v('social_ig'); f.social.fb = v('social_fb'); f.social.tiktok = v('social_tiktok'); f.social.shopee = v('social_shopee');
+  f.copyright = v('copyright_text');
+  // settings
+  data.site.title = v('site_title'); data.site.desc = v('site_desc');
+
+  saveData(); updateDashboard();
+  showToast('Semua perubahan disimpan!','success');
+}
+
+function v(id) { const el = document.getElementById(id); return el ? el.value : ''; }
+
+// ========== HERO FIELDS ==========
+function loadHeroFields() {
+  const h = data.hero;
+  setv('hero_badge', h.badge); setv('hero_title1', h.title1); setv('hero_title_teal', h.title_teal);
+  setv('hero_title2', h.title2); setv('hero_title_fire', h.title_fire); setv('hero_sub', h.sub);
+  setv('hero_btn1_text', h.btn1_text); setv('hero_btn1_wa', h.btn1_wa); setv('hero_btn2_text', h.btn2_text);
+  setv('wa_number', data.wa_number);
+  renderChips();
+}
+function setv(id, val) { const el = document.getElementById(id); if(el) el.value = val || ''; }
+
+function renderChips() {
+  const c = document.getElementById('chips-editor');
+  c.innerHTML = data.chips.map((ch, i) => `
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:.7rem;align-items:end;margin-bottom:.7rem;padding:.8rem;background:var(--gray);border-radius:10px">
+      <div class="form-group" style="margin:0"><label>Icon</label><input type="text" value="${ch.icon}" oninput="data.chips[${i}].icon=this.value"></div>
+      <div class="form-group" style="margin:0"><label>Judul</label><input type="text" value="${ch.title}" oninput="data.chips[${i}].title=this.value"></div>
+      <div class="form-group" style="margin:0"><label>Sub</label><input type="text" value="${ch.sub}" oninput="data.chips[${i}].sub=this.value"></div>
+      <button class="btn btn-danger" onclick="data.chips.splice(${i},1);renderChips()">🗑</button>
+    </div>`).join('');
+}
+function addChip() { data.chips.push({icon:'⭐',title:'Chip Baru',sub:'Subtitle'}); renderChips(); }
+
+// ========== MARQUEE ==========
+function loadMarquee() {
+  renderMarquee();
+}
+function renderMarquee() {
+  const c = document.getElementById('marquee-editor');
+  c.innerHTML = data.marquee.map((m, i) => `
+    <div style="display:flex;gap:.7rem;align-items:center;margin-bottom:.5rem">
+      <input type="text" value="${m}" oninput="data.marquee[${i}]=this.value" style="flex:1">
+      <button class="btn btn-danger" onclick="data.marquee.splice(${i},1);renderMarquee()">🗑</button>
+    </div>`).join('');
+}
+function addMarqueeItem() { data.marquee.push('Item Baru'); renderMarquee(); }
+
+// ========== STATS ==========
+function loadStats() { renderStats(); }
+function renderStats() {
+  const c = document.getElementById('stats-editor');
+  c.innerHTML = data.stats.map((s, i) => `
+    <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:.7rem;align-items:end;margin-bottom:.7rem;padding:.8rem;background:var(--gray);border-radius:10px">
+      <div class="form-group" style="margin:0"><label>Angka/Teks</label><input type="text" value="${s.num}" oninput="data.stats[${i}].num=this.value"></div>
+      <div class="form-group" style="margin:0"><label>Label</label><input type="text" value="${s.label}" oninput="data.stats[${i}].label=this.value"></div>
+      <button class="btn btn-danger" onclick="data.stats.splice(${i},1);renderStats()">🗑</button>
+    </div>`).join('');
+}
+function addStat() { data.stats.push({num:'0+',label:'Label'}); renderStats(); }
+
+// ========== SERVICES ==========
+function loadServices() { renderServicesTable(); }
+function renderServicesTable() {
+  const tb = document.getElementById('services-tbody');
+  tb.innerHTML = data.services.map((s,i) => `
+    <tr>
+      <td><div style="font-size:1.6rem;width:38px;height:38px;display:flex;align-items:center;justify-content:center;background:var(--gray);border-radius:8px">${s.icon}</div></td>
+      <td><strong>${s.name}</strong></td>
+      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${s.desc}</td>
+      <td>${(s.tags||[]).slice(0,2).map(t=>`<span class="prod-badge badge-active">${t}</span>`).join(' ')}${s.tags?.length>2?` +${s.tags.length-2}`:''}</td>
+      <td style="max-width:150px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:.78rem;color:var(--text-light)">${s.wa_msg}</td>
+      <td>
+        <div style="display:flex;gap:.4rem">
+          <button class="btn btn-ghost" style="padding:.3rem .6rem;font-size:.75rem" onclick="editService(${i})">✏️</button>
+          <button class="btn btn-danger" style="padding:.3rem .6rem;font-size:.75rem" onclick="deleteService(${i})">🗑</button>
+        </div>
+      </td>
+    </tr>`).join('');
+}
+let currentSvcTags = [];
+function openServiceModal(idx) {
+  currentSvcTags = [];
+  document.getElementById('serviceModalTitle').textContent = 'Tambah Layanan';
+  document.getElementById('svc_id').value = '';
+  ['svc_icon','svc_name','svc_desc','svc_wa_msg'].forEach(id => setv(id,''));
+  setv('svc_color','si-teal');
+  document.getElementById('svc_tags_data').value = '';
+  renderSvcTags();
+  openModal('serviceModal');
+}
+function editService(idx) {
+  const s = data.services[idx];
+  document.getElementById('serviceModalTitle').textContent = 'Edit Layanan';
+  document.getElementById('svc_id').value = idx;
+  setv('svc_icon', s.icon); setv('svc_name', s.name); setv('svc_desc', s.desc);
+  setv('svc_wa_msg', s.wa_msg); setv('svc_color', s.color);
+  currentSvcTags = [...(s.tags||[])];
+  renderSvcTags();
+  openModal('serviceModal');
+}
+function saveService() {
+  const idx = document.getElementById('svc_id').value;
+  const svc = {
+    id: idx === '' ? Date.now() : data.services[parseInt(idx)].id,
+    icon: v('svc_icon'), color: v('svc_color'), name: v('svc_name'),
+    desc: v('svc_desc'), tags: [...currentSvcTags], wa_msg: v('svc_wa_msg')
+  };
+  if (!svc.name) return showToast('Nama layanan wajib diisi!','error');
+  if (idx === '') data.services.push(svc);
+  else data.services[parseInt(idx)] = svc;
+  saveData(); renderServicesTable(); closeModal('serviceModal'); updateDashboard();
+  showToast('Layanan disimpan!','success');
+}
+function deleteService(idx) {
+  if (!confirm('Hapus layanan ini?')) return;
+  data.services.splice(idx, 1);
+  saveData(); renderServicesTable(); updateDashboard();
+  showToast('Layanan dihapus!');
+}
+function addSvcTag(e) {
+  if (e.key !== 'Enter') return;
+  const inp = document.getElementById('svc_tags_input');
+  const val = inp.value.trim();
+  if (val && !currentSvcTags.includes(val)) { currentSvcTags.push(val); renderSvcTags(); }
+  inp.value = '';
+}
+function renderSvcTags() {
+  const cont = document.getElementById('svc_tags_container');
+  const inp = document.getElementById('svc_tags_input');
+  cont.innerHTML = '';
+  currentSvcTags.forEach((t,i) => {
+    const span = document.createElement('div');
+    span.className = 'tag-item';
+    span.innerHTML = `${t}<button onclick="currentSvcTags.splice(${i},1);renderSvcTags()" title="Hapus">×</button>`;
+    cont.appendChild(span);
+  });
+  cont.appendChild(inp);
+}
+
+// ========== PRODUCTS ==========
+function loadProducts() { renderProductsTable(); }
+function renderProductsTable() {
+  const tb = document.getElementById('products-tbody');
+  tb.innerHTML = data.products.map((p,i) => `
+    <tr>
+      <td><div style="font-size:1.6rem;width:38px;height:38px;display:flex;align-items:center;justify-content:center;background:var(--gray);border-radius:8px">${p.emoji}</div></td>
+      <td><strong>${p.name}</strong></td>
+      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.desc}</td>
+      <td><span class="prod-badge badge-active">${p.category||'-'}</span></td>
+      <td>${p.featured ? '<span class="prod-badge badge-active">✅ Featured</span>' : '<span class="prod-badge badge-inactive">–</span>'}</td>
+      <td>
+        <div style="display:flex;gap:.4rem">
+          <button class="btn btn-ghost" style="padding:.3rem .6rem;font-size:.75rem" onclick="editProduct(${i})">✏️</button>
+          <button class="btn btn-danger" style="padding:.3rem .6rem;font-size:.75rem" onclick="deleteProduct(${i})">🗑</button>
+        </div>
+      </td>
+    </tr>`).join('');
+}
+function openProductModal() {
+  document.getElementById('productModalTitle').textContent = 'Tambah Produk';
+  document.getElementById('prod_id').value = '';
+  ['prod_emoji','prod_name','prod_desc','prod_desc_long','prod_category','prod_wa_msg'].forEach(id => setv(id,''));
+  setv('prod_color','pi-1');
+  document.getElementById('prod_featured').checked = false;
+  openModal('productModal');
+}
+function editProduct(idx) {
+  const p = data.products[idx];
+  document.getElementById('productModalTitle').textContent = 'Edit Produk';
+  document.getElementById('prod_id').value = idx;
+  setv('prod_emoji',p.emoji); setv('prod_name',p.name); setv('prod_desc',p.desc);
+  setv('prod_desc_long',p.desc_long||''); setv('prod_category',p.category);
+  setv('prod_wa_msg',p.wa_msg); setv('prod_color',p.color);
+  document.getElementById('prod_featured').checked = !!p.featured;
+  openModal('productModal');
+}
+function saveProduct() {
+  const idx = document.getElementById('prod_id').value;
+  const prod = {
+    id: idx === '' ? Date.now() : data.products[parseInt(idx)].id,
+    emoji: v('prod_emoji'), color: v('prod_color'), name: v('prod_name'),
+    desc: v('prod_desc'), desc_long: v('prod_desc_long'), category: v('prod_category'),
+    wa_msg: v('prod_wa_msg'), featured: document.getElementById('prod_featured').checked
+  };
+  if (!prod.name) return showToast('Nama produk wajib diisi!','error');
+  if (idx === '') data.products.push(prod);
+  else data.products[parseInt(idx)] = prod;
+  saveData(); renderProductsTable(); closeModal('productModal'); updateDashboard();
+  showToast('Produk disimpan!','success');
+}
+function deleteProduct(idx) {
+  if (!confirm('Hapus produk ini?')) return;
+  data.products.splice(idx, 1);
+  saveData(); renderProductsTable(); updateDashboard();
+  showToast('Produk dihapus!');
+}
+
+// ========== HOW ==========
+function loadHow() {
+  setv('how_tag', data.how.tag); setv('how_title', data.how.title); setv('how_sub', data.how.sub);
+  renderSteps();
+}
+function renderSteps() {
+  const c = document.getElementById('steps-editor');
+  c.innerHTML = data.how.steps.map((s,i) => `
+    <div style="padding:.9rem;background:var(--gray);border-radius:10px;margin-bottom:.7rem">
+      <div style="display:grid;grid-template-columns:auto 1fr auto;gap:.7rem;align-items:start">
+        <div style="width:40px;height:40px;border-radius:50%;background:var(--teal);color:#fff;font-family:'Nunito',sans-serif;font-weight:900;display:flex;align-items:center;justify-content:center">${s.num||i+1}</div>
+        <div>
+          <input type="text" value="${s.title}" oninput="data.how.steps[${i}].title=this.value" style="width:100%;margin-bottom:.4rem" placeholder="Judul langkah">
+          <textarea oninput="data.how.steps[${i}].desc=this.value" style="width:100%;min-height:60px" placeholder="Deskripsi">${s.desc}</textarea>
+        </div>
+        <button class="btn btn-danger" onclick="data.how.steps.splice(${i},1);renderSteps()">🗑</button>
+      </div>
+    </div>`).join('');
+}
+function addStep() {
+  const n = data.how.steps.length + 1;
+  data.how.steps.push({ num: String(n).padStart(2,'0'), title: 'Langkah Baru', desc: 'Deskripsi langkah...' });
+  renderSteps();
+}
+
+// ========== WHY ==========
+function loadWhy() {
+  setv('why_tag', data.why.tag); setv('why_title', data.why.title); setv('why_sub', data.why.sub);
+  renderFeats(); renderStatCards();
+}
+function renderFeats() {
+  const c = document.getElementById('feats-editor');
+  c.innerHTML = data.why.feats.map((f,i) => `
+    <div style="display:grid;grid-template-columns:auto 1fr 1fr auto;gap:.7rem;align-items:end;margin-bottom:.7rem;padding:.8rem;background:var(--gray);border-radius:10px">
+      <div class="form-group" style="margin:0"><label>Icon</label><input type="text" value="${f.icon}" oninput="data.why.feats[${i}].icon=this.value" style="width:60px"></div>
+      <div class="form-group" style="margin:0"><label>Judul</label><input type="text" value="${f.title}" oninput="data.why.feats[${i}].title=this.value"></div>
+      <div class="form-group" style="margin:0"><label>Deskripsi</label><input type="text" value="${f.desc}" oninput="data.why.feats[${i}].desc=this.value"></div>
+      <button class="btn btn-danger" onclick="data.why.feats.splice(${i},1);renderFeats()">🗑</button>
+    </div>`).join('');
+}
+function addFeat() { data.why.feats.push({icon:'⭐',title:'Keunggulan Baru',desc:'Deskripsi keunggulan...'}); renderFeats(); }
+function renderStatCards() {
+  const c = document.getElementById('statcard-editor');
+  c.innerHTML = data.why.stat_cards.map((s,i) => `
+    <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:.7rem;align-items:end;margin-bottom:.7rem;padding:.8rem;background:var(--gray);border-radius:10px">
+      <div class="form-group" style="margin:0"><label>Angka</label><input type="text" value="${s.num}" oninput="data.why.stat_cards[${i}].num=this.value"></div>
+      <div class="form-group" style="margin:0"><label>Label</label><input type="text" value="${s.label}" oninput="data.why.stat_cards[${i}].label=this.value"></div>
+      <button class="btn btn-danger" onclick="data.why.stat_cards.splice(${i},1);renderStatCards()">🗑</button>
+    </div>`).join('');
+}
+function addStatCard() { data.why.stat_cards.push({num:'0+',label:'Label'}); renderStatCards(); }
+
+// ========== TESTIMONIALS ==========
+function loadTestimonials() { renderTestiTable(); }
+function renderTestiTable() {
+  const tb = document.getElementById('testi-tbody');
+  tb.innerHTML = data.testimonials.map((t,i) => `
+    <tr>
+      <td><div style="width:38px;height:38px;border-radius:50%;background:var(--teal);color:#fff;font-weight:900;display:flex;align-items:center;justify-content:center;font-size:1.1rem">${t.avatar}</div></td>
+      <td><strong>${t.name}</strong></td>
+      <td>${t.from}</td>
+      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-style:italic">"${t.quote}"</td>
+      <td>★${t.stars}</td>
+      <td>
+        <div style="display:flex;gap:.4rem">
+          <button class="btn btn-ghost" style="padding:.3rem .6rem;font-size:.75rem" onclick="editTesti(${i})">✏️</button>
+          <button class="btn btn-danger" style="padding:.3rem .6rem;font-size:.75rem" onclick="deleteTesti(${i})">🗑</button>
+        </div>
+      </td>
+    </tr>`).join('');
+}
+function openTestiModal() {
+  document.getElementById('testiModalTitle').textContent = 'Tambah Testimoni';
+  document.getElementById('testi_id').value = '';
+  ['testi_name','testi_from','testi_avatar','testi_quote'].forEach(id => setv(id,''));
+  setv('testi_color','av1'); setv('testi_stars','5');
+  openModal('testiModal');
+}
+function editTesti(idx) {
+  const t = data.testimonials[idx];
+  document.getElementById('testiModalTitle').textContent = 'Edit Testimoni';
+  document.getElementById('testi_id').value = idx;
+  setv('testi_name',t.name); setv('testi_from',t.from); setv('testi_avatar',t.avatar);
+  setv('testi_quote',t.quote); setv('testi_color',t.color); setv('testi_stars',t.stars);
+  openModal('testiModal');
+}
+function saveTestimoni() {
+  const idx = document.getElementById('testi_id').value;
+  const testi = {
+    id: idx === '' ? Date.now() : data.testimonials[parseInt(idx)].id,
+    name: v('testi_name'), from: v('testi_from'), avatar: v('testi_avatar'),
+    quote: v('testi_quote'), color: v('testi_color'), stars: parseInt(v('testi_stars'))||5
+  };
+  if (!testi.name) return showToast('Nama wajib diisi!','error');
+  if (idx === '') data.testimonials.push(testi);
+  else data.testimonials[parseInt(idx)] = testi;
+  saveData(); renderTestiTable(); closeModal('testiModal'); updateDashboard();
+  showToast('Testimoni disimpan!','success');
+}
+function deleteTesti(idx) {
+  if (!confirm('Hapus testimoni ini?')) return;
+  data.testimonials.splice(idx, 1);
+  saveData(); renderTestiTable(); updateDashboard();
+  showToast('Testimoni dihapus!');
+}
+
+// ========== CTA ==========
+function loadCta() {
+  const c = data.cta;
+  setv('cta_tag',c.tag); setv('cta_title',c.title); setv('cta_desc',c.desc);
+  setv('cta_btn_wa',c.btn_wa); setv('cta_wa_msg',c.wa_msg); setv('cta_btn2',c.btn2);
+}
+
+// ========== FOOTER ==========
+function loadFooter() {
+  const f = data.footer;
+  setv('company_name',f.company_name); setv('company_tagline',f.company_tagline);
+  setv('contact_email',f.email); setv('contact_wa',f.wa); setv('contact_address',f.address); setv('contact_hours',f.hours);
+  setv('social_ig',f.social.ig); setv('social_fb',f.social.fb); setv('social_tiktok',f.social.tiktok); setv('social_shopee',f.social.shopee);
+  setv('copyright_text',f.copyright);
+}
+
+// ========== SETTINGS ==========
+function loadSettings() {
+  setv('site_title', data.site.title); setv('site_desc', data.site.desc);
+}
+
+// ========== MODALS ==========
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(m => m.addEventListener('click', e => { if(e.target===m) m.classList.remove('open'); }));
+
+// ========== TOAST ==========
+function showToast(msg, type='') {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'show ' + type;
+  setTimeout(() => t.className = '', 2800);
+}
+
+// ========== EXPORT / IMPORT ==========
+function exportJSON() {
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = 'rananda-data.json'; a.click();
+  showToast('Data diekspor!','success');
+}
+function importJSON() { document.getElementById('importFile').click(); }
+function handleImport(e) {
+  const file = e.target.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    try {
+      data = JSON.parse(ev.target.result);
+      saveData(); initApp();
+      showToast('Data berhasil diimpor!','success');
+    } catch {
+      showToast('File tidak valid!','error');
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+}
+
+// ========== RESPONSIVE ==========
+if (window.innerWidth <= 900) {
+  document.getElementById('menuToggle').style.display = 'block';
+}
+
+// ========== INIT ==========
+document.getElementById('loginPass').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+</script>
+</body>
+</html>
