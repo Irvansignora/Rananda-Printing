@@ -79,7 +79,34 @@ footer a{color:rgba(0,212,232,.7);text-decoration:none}
 
 @media(max-width:640px){.filter-right{width:100%}.search-box{width:100%;flex:1}}
 </style>
-</head>
+<script>
+// Theme pre-loader: reads from rp_data (same as index.html)
+(function(){
+  try {
+    const d = JSON.parse(localStorage.getItem('rp_data')||'{}');
+    const tid = d.theme; if(!tid||tid==='ocean') return;
+    const custom = d.theme_custom;
+    const TV = {
+      sunset:  {p:'#e85d00',pl:'#ff8c42',pd:'#b34400',s:'#fbbf24',a:'#ef4444',n:'#1a0a00',t:'#1a0a00',tl:'#7a4a2a',bg:'#ffffff',sb:'#fff8f3',cb:'#ffffff',nb:'rgba(255,255,255,0.95)',fb:'#1a0a00',mode:'light',font:'Exo 2'},
+      midnight:{p:'#38bdf8',pl:'#7dd3fc',pd:'#0284c7',s:'#818cf8',a:'#f472b6',n:'#e2e8f0',t:'#e2e8f0',tl:'#94a3b8',bg:'#0f172a',sb:'#1e293b',cb:'#1e293b',nb:'rgba(15,23,42,0.95)',fb:'#060d19',mode:'dark',font:'Montserrat'},
+      forest:  {p:'#059669',pl:'#34d399',pd:'#065f46',s:'#d97706',a:'#84cc16',n:'#064e3b',t:'#064e3b',tl:'#3d7a60',bg:'#ffffff',sb:'#f0fdf4',cb:'#ffffff',nb:'rgba(255,255,255,0.92)',fb:'#022c22',mode:'light',font:'Nunito'},
+      royal:   {p:'#a855f7',pl:'#d8b4fe',pd:'#7c3aed',s:'#f59e0b',a:'#ec4899',n:'#f3e8ff',t:'#f3e8ff',tl:'#c4b5fd',bg:'#160728',sb:'#1e0a3c',cb:'#1e0a3c',nb:'rgba(22,7,40,0.95)',fb:'#0d0418',mode:'dark',font:'Playfair Display'}
+    };
+    const v = tid==='custom'&&custom ? {p:custom.vars.primary,pl:custom.vars.primaryLight,pd:custom.vars.primaryDark,s:custom.vars.secondary,a:custom.vars.accent,n:custom.vars.navy,t:custom.vars.text,tl:custom.vars.textLight,bg:custom.vars.bodyBg,sb:custom.vars.sectionBg,cb:custom.vars.cardBg,nb:custom.vars.navBg,fb:custom.vars.footerBg,mode:custom.mode,font:custom.font} : TV[tid];
+    if(!v) return;
+    const r = document.documentElement;
+    r.style.setProperty('--teal',v.p); r.style.setProperty('--teal-light',v.pl||v.p); r.style.setProperty('--teal-dark',v.pd||v.p);
+    r.style.setProperty('--orange',v.s); r.style.setProperty('--amber',v.a);
+    r.style.setProperty('--navy',v.n); r.style.setProperty('--text',v.t||v.n); r.style.setProperty('--text-light',v.tl||'#5a6a90');
+    r.style.setProperty('--white',v.mode==='dark'?(v.bg||'#0f172a'):'#ffffff');
+    r.style.setProperty('--gray',v.sb||'#f5f8fa'); r.style.setProperty('--card-bg',v.cb||'#ffffff');
+    r.style.setProperty('--footer-bg',v.fb||'#1a2d6b'); r.style.setProperty('--nav-bg',v.nb||'rgba(255,255,255,0.9)');
+    r.style.setProperty('--heading-font',"'"+(v.font||'Nunito')+"',sans-serif");
+    r.dataset.theme = v.mode||'light';
+    if(v.font&&v.font!=='Nunito'&&v.font!=='Poppins'){const l=document.createElement('link');l.rel='stylesheet';l.href='https://fonts.googleapis.com/css2?family='+encodeURIComponent(v.font)+':wght@400;700;800;900&display=swap';document.head.appendChild(l);}
+  }catch(e){}
+})();
+</script></head>
 <body>
 
 <!-- NAV -->
